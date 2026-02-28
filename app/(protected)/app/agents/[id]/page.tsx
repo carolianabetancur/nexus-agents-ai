@@ -72,7 +72,6 @@ export default function AgentDetailPage({ params }: Props) {
     resolver: zodResolver(agentEditSchema),
   });
 
-  // Sync form when agent data loads
   useEffect(() => {
     if (agent) {
       reset({
@@ -115,7 +114,6 @@ export default function AgentDetailPage({ params }: Props) {
     setIsEditing(false);
   };
 
-  // ── Loading / error states ──────────────────────────────────────────────
   if (isLoading)
     return (
       <div className="state-page">
@@ -137,13 +135,11 @@ export default function AgentDetailPage({ params }: Props) {
 
   return (
     <div className="page">
-      {/* Back nav */}
       <Link href="/app/agents" className="back-btn">
         <ArrowLeft size={15} />
         All Agents
       </Link>
 
-      {/* Header card */}
       <div className="hero-card">
         <div className="hero-top">
           <div className="hero-left">
@@ -158,12 +154,17 @@ export default function AgentDetailPage({ params }: Props) {
           <div className="hero-right">
             <StatusBadge status={agent.status} />
             {!isEditing ? (
-              <button className="btn-edit" onClick={() => setIsEditing(true)}>
+              <button
+                type="button"
+                className="btn-edit"
+                onClick={() => setIsEditing(true)}
+              >
                 <Pencil size={14} /> Edit Agent
               </button>
             ) : (
               <div className="edit-actions">
                 <button
+                  type="button"
                   className="btn-cancel"
                   onClick={cancelEdit}
                   disabled={updateAgent.isPending}
@@ -171,6 +172,7 @@ export default function AgentDetailPage({ params }: Props) {
                   <X size={14} /> Cancel
                 </button>
                 <button
+                  type="button"
                   className="btn-save"
                   onClick={handleSubmit(onSubmit)}
                   disabled={updateAgent.isPending || !isDirty}
@@ -190,7 +192,6 @@ export default function AgentDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Stats row */}
         <div className="stats-row">
           <div className="stat">
             <Activity size={14} className="stat-icon" />
@@ -219,19 +220,18 @@ export default function AgentDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Detail / Edit form */}
       <div className="detail-grid">
-        {/* Left: editable fields */}
         <div className="detail-card">
           <h2 className="card-title">Configuration</h2>
 
           <div className="field-group">
-            <label className="field-label">
+            <label className="field-label" htmlFor="agent-name">
               <Pencil size={11} /> Name
             </label>
             {isEditing ? (
               <>
                 <input
+                  id="agent-name"
                   className={`field-input ${errors.name ? "field-input--error" : ""}`}
                   {...register("name")}
                 />
@@ -245,12 +245,13 @@ export default function AgentDetailPage({ params }: Props) {
           </div>
 
           <div className="field-group">
-            <label className="field-label">
+            <label className="field-label" htmlFor="agent-description">
               <Tag size={11} /> Description
             </label>
             {isEditing ? (
               <>
                 <textarea
+                  id="agent-description"
                   rows={3}
                   className={`field-input field-textarea ${errors.description ? "field-input--error" : ""}`}
                   {...register("description")}
@@ -268,9 +269,12 @@ export default function AgentDetailPage({ params }: Props) {
 
           <div className="field-row">
             <div className="field-group">
-              <label className="field-label">Status</label>
+              <label className="field-label" htmlFor="agent-status">
+                Status
+              </label>
               {isEditing ? (
                 <select
+                  id="agent-status"
                   className="field-input field-select"
                   {...register("status")}
                 >
@@ -288,9 +292,12 @@ export default function AgentDetailPage({ params }: Props) {
             </div>
 
             <div className="field-group">
-              <label className="field-label">Category</label>
+              <label className="field-label" htmlFor="agent-category">
+                Category
+              </label>
               {isEditing ? (
                 <select
+                  id="agent-category"
                   className="field-input field-select"
                   {...register("category")}
                 >
@@ -307,7 +314,7 @@ export default function AgentDetailPage({ params }: Props) {
           </div>
 
           <div className="field-group">
-            <label className="field-label">Tags</label>
+            <span className="field-label">Tags</span>
             {isEditing ? (
               <>
                 <div className="tag-picker">
@@ -338,36 +345,34 @@ export default function AgentDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Right: metadata (read-only) */}
         <div className="detail-card">
           <h2 className="card-title">Metadata</h2>
 
           <div className="field-group">
-            <label className="field-label">
+            <span className="field-label">
               <Calendar size={11} /> Created
-            </label>
+            </span>
             <p className="field-value mono">
               {format(new Date(agent.createdAt), "PPP p")}
             </p>
           </div>
 
           <div className="field-group">
-            <label className="field-label">
+            <span className="field-label">
               <Calendar size={11} /> Last Updated
-            </label>
+            </span>
             <p className="field-value mono">
               {format(new Date(agent.updatedAt), "PPP p")}
             </p>
           </div>
 
           <div className="field-group">
-            <label className="field-label">Generation Run</label>
+            <span className="field-label">Generation Run</span>
             <Link href={`/app/generations`} className="run-link">
               {agent.generationRunId} →
             </Link>
           </div>
 
-          {/* Success rate bar */}
           <div className="field-group">
             <label className="field-label">Success Rate</label>
             <div className="rate-bar-wrap">
@@ -387,7 +392,6 @@ export default function AgentDetailPage({ params }: Props) {
             </div>
           </div>
 
-          {/* Optimistic update notice */}
           {updateAgent.isPending && (
             <div className="optimistic-notice">
               <Loader2 size={12} className="spin" />
