@@ -73,6 +73,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <button
+            type="button"
             onClick={logout}
             className="logout-btn"
             aria-label="Log out"
